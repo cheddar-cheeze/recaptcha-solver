@@ -2,9 +2,8 @@ from selenium import webdriver
 from bs4 import BeautifulSoup
 import requests
 import shutil
-from darkflow.net.build import TFNet
 import cv2
-import os
+from tensorflow_dir import label_image
 
 def solve():
     profile = webdriver.FirefoxProfile()
@@ -20,8 +19,8 @@ def solve():
     browser.switch_to_frame(1)
     bs = BeautifulSoup(browser.page_source, 'html.parser')
     rows = bs.find_all('tr')
-    label = bs.find('strong')
-    print( "What we're looking for:" + str(label.string))
+    classifier = bs.find('strong')
+    print( "What we're looking for:" + str(classifier.string))
     height = len(list(rows))
     width = len(list(rows[0].children))
     img = bs.find('img')
@@ -38,10 +37,6 @@ def solve():
     for index, val in enumerate(rows):
         for index2, val2 in enumerate(rows[0].children):
             cv2.imwrite('captchas/captcha_cropped' + str(index) + str(index2) + '.jpg', captcha[crop_y*index:(index+1)*crop_y, crop_x*index2:(index2+1)*crop_x])
-    options = {}
-    tfnet = TFNet(options)
-    for captcha in os.listdir('captchas'):
-        cv_captcha = cv2.imread('captchas/' + captcha)
-        result = tfnet.return_predict(cv_captcha)
+            label_image.main('../captchas/captcha_cropped' + str(index) + str(index2) + '.jpg')
     browser.quit()
 solve()
