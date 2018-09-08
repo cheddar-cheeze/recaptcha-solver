@@ -1,8 +1,18 @@
-import keras
-import sys
+import argparse
 import os
+import json
+
 
 def main():
+    parser = argparse.ArgumentParser(description='Train the model with training data')
+    parser.add_argument('root_dir', metavar='path', type=str, nargs=1, help='Root data folder where the test and validation sets are')
+    parser.add_argument('epochs', metavar='epochs', type=int, nargs=1, help='How many epochs the training will consist of')
+    args = parser.parse_args()
+    root_dir = vars(args)['root_dir'][0]
+    epochs = vars(args)['epochs'][0]
+    print(root_dir)
+
+    import keras
     model = keras.models.Sequential()
 
     model.add(keras.layers.Conv2D(32, (3, 3), input_shape=(100, 100, 3)))
@@ -34,19 +44,21 @@ def main():
         horizontal_flip=True)
 
     val_datagen = keras.preprocessing.image.ImageDataGenerator(rescale=1./255)
-    root_data = sys.argv[1]
-    train_data = train_datagen.flow_from_directory(os.path.join(root_data, 'train'), target_size=(100, 100), class_mode="binary")
+    train_data = train_datagen.flow_from_directory(os.path.join(root_dir, 'train'), target_size=(100, 100), class_mode="binary")
     train_img_count = 0
-    for sub in os.listdir(os.path.join(root_data, 'train')):
-        amt = os.listdir(os.path.join(root_data, 'train', sub))
+    for sub in os.listdir(os.path.join(root_dir, 'train')):
+        amt = os.listdir(os.path.join(root_dir, 'train', sub))
         train_img_count = train_img_count + len(amt)
-    val_data = val_datagen.flow_from_directory(os.path.join(root_data, 'validation'), target_size=(100, 100), class_mode="binary")
+    val_data = val_datagen.flow_from_directory(os.path.join(root_dir, 'validation'), target_size=(100, 100), class_mode="binary")
     val_img_count = 0
-    for sub in os.listdir(os.path.join(root_data, 'validation')):
-        amt = os.listdir(os.path.join(root_data, 'validation', sub))
+    for sub in os.listdir(os.path.join(root_dir, 'validation')):
+        amt = os.listdir(os.path.join(root_dir, 'validation', sub))
         val_img_count = val_img_count + len(amt)
     tensorboard = keras.callbacks.TensorBoard(log_dir='logs')
 
-    model.fit_generator(train_data, steps_per_epoch=train_img_count // 32, epochs=sys.argv[2], validation_data=val_data, validation_steps=val_img_count // 32, callbacks=[tensorboard])
+    model.fit_generator(train_data, steps_per_epoch=train_img_count // 32, epochs=epochs, validation_data=val_data, validation_steps=val_img_count // 32, callbacks=[tensorboard])
     model.save_weights('weights.h5')
-main()
+    j = model.to_json()
+    json.dump(j, open('model.json', 'w'))
+if __name__ == '__main__':
+    main()

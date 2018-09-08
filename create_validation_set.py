@@ -1,7 +1,7 @@
 import os
-import sys
 import random
 import shutil
+import argparse
 
 def progress_bar(iteration, total, prefix = '', suffix = '', decimals = 1, length = 100, fill = '█'):
     percent = ("{0:." + str(decimals) + "f}").format(100 * (iteration / float(total)))
@@ -13,9 +13,15 @@ def progress_bar(iteration, total, prefix = '', suffix = '', decimals = 1, lengt
     if iteration == total:
         print()
 
-train_dir = sys.argv[1]
-val_dir = sys.argv[2]
-val_precent = sys.argv[3]
+parser = argparse.ArgumentParser(description='Allows the create a validation set with ease')
+parser.add_argument('t_dir', metavar='Training Dir', type=str, nargs=1, help='Path to the training data set')
+parser.add_argument('v_dir', metavar='Validation Dir', type=str, nargs=1, help='Path to the validation data set')
+parser.add_argument('precent', metavar='Validation Precent', type=int, nargs=1, help='Precent of training images that will be copied to validation set')
+args = parser.parse_args()
+
+train_dir = vars(args)['t_dir'][0]
+val_dir = vars(args)['v_dir'][0]
+val_precent = vars(args)['precent'][0]
 
 if not os.path.exists(train_dir):
     print('Path to train directory does not exist!')
