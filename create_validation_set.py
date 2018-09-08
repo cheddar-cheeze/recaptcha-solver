@@ -13,7 +13,7 @@ def progress_bar(iteration, total, prefix = '', suffix = '', decimals = 1, lengt
     if iteration == total:
         print()
 
-parser = argparse.ArgumentParser(description='Allows the create a validation set with ease')
+parser = argparse.ArgumentParser(description='Allows the creation a validation set with ease')
 parser.add_argument('t_dir', metavar='Training Dir', type=str, nargs=1, help='Path to the training data set')
 parser.add_argument('v_dir', metavar='Validation Dir', type=str, nargs=1, help='Path to the validation data set')
 parser.add_argument('precent', metavar='Validation Precent', type=int, nargs=1, help='Precent of training images that will be copied to validation set')
