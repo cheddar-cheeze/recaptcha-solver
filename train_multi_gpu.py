@@ -7,6 +7,7 @@ import sklearn
 def main():
     parser = argparse.ArgumentParser(description='Train the model with training data')
     parser.add_argument('root_dir', metavar='path', type=str, nargs=1, help='Root data folder where the test and validation sets are')
+    parser.add_argument('gpus', type=int, nargs=1, help='Amout of gpus to use')
     parser.add_argument('epochs', metavar='epochs', type=int, nargs=1, help='How many epochs the training will consist of')
     args = parser.parse_args()
     root_dir = vars(args)['root_dir'][0]
@@ -14,7 +15,7 @@ def main():
     print(root_dir)
 
     import keras
-    model = keras.models.Sequential()
+    model = keras.utils.multi_gpu_model(keras.models.Sequential(), gpus=)
 
     model.add(keras.layers.Conv2D(32, (3, 3), input_shape=(100, 100, 3)))
     model.add(keras.layers.Activation('relu'))
