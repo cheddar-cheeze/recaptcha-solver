@@ -12,10 +12,11 @@ def main():
     args = parser.parse_args()
     root_dir = vars(args)['root_dir'][0]
     epochs = vars(args)['epochs'][0]
+    gpus = vars(args)['gpus'][0]
     print(root_dir)
 
     import keras
-    model = keras.utils.multi_gpu_model(keras.models.Sequential(), gpus=)
+    model = keras.utils.multi_gpu_model(keras.models.Sequential(), gpus=int(gpus))
 
     model.add(keras.layers.Conv2D(32, (3, 3), input_shape=(100, 100, 3)))
     model.add(keras.layers.Activation('relu'))
