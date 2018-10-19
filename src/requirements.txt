@@ -3,7 +3,6 @@ python-magic
 flask
 bs4
 opencv-python
-Pillow
 tensorboard
 icrawler
 selenium

@@ -3,7 +3,6 @@ from bs4 import BeautifulSoup
 import requests
 import shutil
 import cv2
-from tensorflow_dir import label_image
 
 def solve():
     profile = webdriver.FirefoxProfile()
